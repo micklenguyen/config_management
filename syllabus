@@ -1,0 +1,13 @@
+Configure Management Syllabus 
+
+Assignment 1
+1. Set the background of the prompt of the master to red, for all users
+2. Set the background of the prompt of the minion to green, for all users
+3. Set the path for all users, path can be arbitrary
+4. Set the message of the day (motd)
+
+Assignment 2
+1. Config master with NTP service
+2. Config minion with NTP client
+3. Change time manually on master and see if time changes on the minion and vice versa
+4. Have NTP Autostart on boot
