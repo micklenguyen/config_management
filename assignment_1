@@ -1,0 +1,5 @@
+Assignment 1
+1. Set the background of the prompt of the master to red, for all users
+2. Set the background of the prompt of the minion to green, for all users
+3. Set the path for all users, path can be arbitrary
+4. Set the message of the day (motd)
