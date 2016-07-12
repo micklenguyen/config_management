@@ -3,3 +3,44 @@ Assignment 1
 2. Set the background of the prompt of the minion to green, for all users
 3. Set the path for all users, path can be arbitrary
 4. Set the message of the day (motd)
+
+****/etc/profile.d is where you should add customer files*****
+
+
+Answer 1 & 2:
+Locally
+In .bash_profile add:
+
+#Sets the background of prompt to red
+export PS1="\e[0;41m[\u@\h \W]\$ \e[m"
+
+Globally:
+In /etc/bashrc add:
+
+case "$HOSTNAME" in
+        master) PROMPT_COLOR="\e[0;41m[\u@\h \W]\$ \e[m " ;;
+        minion) PROMPT_COLOR="\e[0;42m[\u@\h \W]\$ \e[m " ;;
+        *) PROMPT_COLOR="[\u@\h \W]\$ "
+esac
+
+PS1=${PROMPT_COLOR}
+
+
+Answer #3:
+
+Added line in /etc/profile
+# Path manipulation
+if [ "$EUID" = "0" ]; then
+    pathmunge /usr/sbin
+    pathmunge /usr/local/sbin
+    pathmunge /home/vagrant/hell #Added this path
+else
+    pathmunge /usr/local/sbin after
+    pathmunge /usr/sbin after
+    pathmunge /home/vagrant/hell after #Added this path
+fi
+
+Answer #3
+
+In /etc/motd add content:
+THIS IS THE MESSAGE OF THE DAY
