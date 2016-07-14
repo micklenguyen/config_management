@@ -40,7 +40,7 @@ else
     pathmunge /home/vagrant/hell after #Added this path
 fi
 
-Answer #3
+Answer #4:
 
 In /etc/motd add content:
 THIS IS THE MESSAGE OF THE DAY
