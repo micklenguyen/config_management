@@ -1,9 +1,12 @@
-Assignment 2
-1. Config master with NTP service
-2. Config minion with NTP client
-3. Change time manually on master and see if time changes on the minion and vice versa
+Project 2
+
+Configure / Setup NTP
+
+1. Configure Master with NTP service
+2. Configure Minion with NTP client
+3. Change time manually on Master and see if time changes on the Minion and vice versa
 4. Have NTP Autostart on boot
-5. What port is this listening on?
+5. Check listening ports of the NTP service
 
 
 Answer #1:
