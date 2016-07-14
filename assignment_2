@@ -1,1 +1,209 @@
+Assignment 2
+1. Config master with NTP service
+2. Config minion with NTP client
+3. Change time manually on master and see if time changes on the minion and vice versa
+4. Have NTP Autostart on boot
+5. What port is this listening on?
+
+
+Answer #1:
+
+Info mostly from link below:
+http://www.thegeekstuff.com/2014/06/linux-ntp-server-client/
+
+1. Install NTP Server
+First, install NTP package on your server using yum. Shown below:
+
+# yum install ntp
+
+2. Setup Restrict Values in ntp.conf
+Modify the /etc/ntp.conf file to make sure it has the following line.
+
+# Permit time synchronization with our time source, but do not
+# permit the source to query or modify the service on this system.
+restrict default kod nomodify notrap nopeer noquery
+
+The first restrict line allows other clients to query your time server. This restrict line has the following parameters
+
+noquery prevents dumping status data from ntpd.
+notrap prevents control message trap service.
+nomodify prevents all ntpq queries that attempts to modify the server.
+nopeer prevents all packets that attempts to establish a peer association.
+Kod – Kiss-o-death packet is to be sent to reduce unwanted queries
+
+3. Add Local Clock as Backup
+Add the local clock to the ntp.conf file so that if the NTP server is disconnected from the internet, NTP server provides time from its local system clock.
+
+server  127.127.1.0 # local clock
+fudge   127.127.1.0 stratum 10
+In the above line, Stratum is used to synchronize the time with the server based on distance. A stratum-1 time server acts as a primary network time standard. A stratum-2 server is connected to the stratum-1 server over the network. Thus, a stratum-2 server gets its time via NTP packet requests from a stratum-1 server. A stratum-3 server gets its time via NTP packet requests from a stratum-2 server, and so on.
+
+Also stratum 0 devices are always used as reference clock.
+
+4. Setup NTP Log Parameters
+Specify the drift file and the log file location in your ntp.conf file
+
+driftfile /var/lib/ntp/ntp.drift
+logfile /var/log/ntp.log
+
+driftfile is used to log how far your clock is from what it should be, and slowly ntp should lower this value as time progress.
+
+5. Start the NTP Daemon
+Once the ntp.conf is configured with correct settings, start the ntp daemon.
+# systemetl start ntpd
+
+6. Check the NTP Status
+Check the status of NTP using the ntpq command. If you get any connection refused errors then the time server is not responding or the NTP daemon/port is not started or listening.
+
+# ntpq -p
+
+
+Answer #2:
+
+1. Install NTP Server
+First, install NTP package on your server using yum. Shown below:
+
+yum install ntp
+
+2. Modify ntp.conf on NTP Client
+Comment out the following.
+server 0.rhel.pool.ntp.org iburst 
+server 1.rhel.pool.ntp.org iburst 
+server 2.rhel.pool.ntp.org iburst 
+server 3.rhel.pool.ntp.org iburst
+
+Edit your NTP.conf to reflect appropriate entries for your own NTP server. Get the IP address from the server with "ip addr" command.
+
+server 19.168.1.1 prefer
+
+4. Setup NTP Log Parameters
+Specify the drift file and the log file location in your ntp.conf file
+
+# The drift file and the log file location to show how far the clock drift
+driftfile /var/lib/ntp/ntp.drift
+logfile /var/log/ntp.log
+
+driftfile is used to log how far your clock is from what it should be, and slowly ntp should lower this value as time progress.
+
+5. Start the NTP Daemon
+Once the ntp.conf is configured with correct settings, start the ntp daemon.
+systemetl start ntpd
+
+6. Check the NTP Status
+Check the status of NTP using the ntpq command. If you get any connection refused errors then the time server is not responding or the NTP daemon/port is not started or listening.
+
+# ntpq -p
+
+7. Set Local Date and Time
+The ntpdate command can be used to set the local date and time by polling the NTP server. Typically, you’ll have to do this only one time. Your jitter value should be low, else check the drift from the clock in the driftfile. You may also need to change to some other NTP server based on the difference. This command synchronizes the time with your NTP server manually.
+
+# ntpdate –u 19.168.1.1
+
+After this initial sync, NTP client will talk to the NTP server on an on-going basis to make sure the local time reflects the accurate time. You can also use the following command to get the current status of ntpd.
+
+# ntpdc -c sysinfo
+
+
+Answer #3:
+
+1. Turn Off VM Time Sync
+On your local machine run this command:
+
+# VBoxManage setextradata “vagrant_master_1466718712371_1090" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled” 1
+
+Turns off sync to virtual machine clock. Will need to run seperately on the server and client. Vagrant halt and up commands needs to run for changes to take place on each host.
+
+2. Change Time on ntp Server to Show Client Inheritance of Time
+First, comment out public servers on /etc/ntp.conf and add fake server.
+
+# server 0.centos.pool.ntp.org iburst
+# server 1.centos.pool.ntp.org iburst
+# server 2.centos.pool.ntp.org iburst
+# server 3.centos.pool.ntp.org iburst
+server 10.10.10.10 iburst
+
+&
+
+Also, comment out any local clock backups.
+
+# server  127.127.1.0 # local clock
+# fudge   127.127.1.0 stratum 10
+
+Next, comment out ntp server on /etc/ntp/step-tickers.
+
+# 0.centos.pool.ntp.org
+
+These step will keep the ntp server from sync with 
+
+Next, restart the ntp daemon to apply changes.
+
+# systemctl restart ntpd
+
+Manually change the time and confirm change.
+
+# sudo timedatectl set-time 18:23:00
+# date
+
+Restart the ntp daemon on client to reflect manually change time.
+
+# systemctl restart ntpd
+# date
+
+Reverse steps and restart ntp daemon to revert to original settings. 
+
+
+3. Change Time on ntp Client to Show Drift Correction
+First you need to turn of ntp daemon.
+
+# systemctl stop ntpd
+
+Then you need to change the time.
+
+# sudo timedatectl set-time 18:23:00
+
+Turn back on ntp daemon
+
+# systemctl start ntpd
+
+Confirm that it is connecting to the ntp server.
+
+# ntpq -p
+
+Check time.
+
+# date
+
+
+Answer #4:
+Find out what port ntp os listening on and to autostart on boot by running the following:
+
+# netstat -an | grep 123
+# systemctl | grep ntpd
+
+*THIS IS NOT CORRECT MISSING A STEP*
+
+
+Summary of Commands:
+
+# systemctl start ntpd
+Command for Centos to start up ntp daemon
+
+# lsof -i -n -P
+Lists all the services installed
+
+# ps -aux | grep ntp
+Use to see if ntp is running
+
+# ntpq -p
+The ntpq utility program is used to monitor NTP daemon ntpd operations and determine performance. Tells you if its working.
+
+# sudo timedatectl set-time 18:23:00
+Manually sets date
+
+# VBoxManage setextradata “vagrant_master_1466718712371_1090" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled” 1
+Turns off sync to virtual mahine clock
+
+
+
+
 
