@@ -11,3 +11,4 @@ Assignment 2
 2. Config minion with NTP client
 3. Change time manually on master and see if time changes on the minion and vice versa
 4. Have NTP Autostart on boot
+5. What port is this listening on?
