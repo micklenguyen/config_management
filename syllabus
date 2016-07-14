@@ -1,14 +1,26 @@
 Configure Management Syllabus 
 
-Assignment 1
+Project 1
+
 1. Set the background of the prompt of the master to red, for all users
 2. Set the background of the prompt of the minion to green, for all users
-3. Set the path for all users, path can be arbitrary
-4. Set the message of the day (motd)
+3. Set the path for all users. the path can be arbitrary.
+4. Set the MOTD for all users
 
-Assignment 2
-1. Config master with NTP service
-2. Config minion with NTP client
-3. Change time manually on master and see if time changes on the minion and vice versa
+Project 2
+Configure / Setup NTP
+
+1. Configure Master with NTP service
+2. Configure Minion with NTP client
+3. Change time manually on Master and see if time changes on the Minion and vice versa
 4. Have NTP Autostart on boot
-5. What port is this listening on?
+5. Check listening ports of the NTP service
+ 
+Project 3
+1. Configure/Setup Apache
+2. Install/Start Apache
+3. Configure Apache to serve web content from all home directories
+4. Create "Hello World" page for 2 users
+5. Startup Apache at boot
+6. Configure Apache to run on port 8080
+7. Run Apache not as root, but as a different user.
