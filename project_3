@@ -99,6 +99,10 @@ Configure Apache to run on port 8080
 $ vi /etc/httpd/conf/httpd.conf
 add Listen 1.2.3.4:8080
 
+To confirm:
+
+$ netstat -anp | grep 8080
+
 
 Answer #6.
 Start Apache not as root, but as a different user.
