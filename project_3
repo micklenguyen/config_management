@@ -6,7 +6,117 @@ Configure/Setup Apache
 3. Create "Hello World" page for 2 users
 4. Startup Apache at boot
 5. Configure Apache to run on port 8080
-6. Run Apache not as root, but as a different user
+6. Start Apache not as root, but as a different user.
+7. Start the HTTPD parent process as another user (not root)
+
+http://www.tutorialspoint.com/articles/install-and-configure-apache-server-on-centos-7
+http://www.liquidweb.com/kb/how-to-install-apache-on-centos-7/
+https://www.unixmen.com/linux-basics-enable-apache-userdir-centos-7rhel-7/
+
+
+Answer 1: 
+Install/Start Apache
+
+$ sudo yum -y install httpd
+
+
+Answer 2:
+Configure Apache to serve web content from all home directories
+
+First, enable Apache Userdirs. 
+
+$ vi etc/httpd/conf.d/userdir.conf
+
+Match the file to what is listened below.
+
+<IfModule mod_userdir.c>
+#
+# UserDir is disabled by default since it can confirm the presence
+# of a username on the system (depending on home directory
+# permissions).
+#
+UserDir enabled unixmenuser
+#
+# To enable requests to /~user/ to serve the user's public_html
+# directory, remove the "UserDir disabled" line above, and uncomment
+# the following line instead:
+#
+UserDir public_html
+</IfModule>
+<Directory /home/*/public_html>
+Options Indexes Includes FollowSymLinks
+Require all granted
+</Directory>
+
+Next, restart apache
+
+$ systemctl restart httpd.service
+
+
+Answer 3:
+Create "Hello World" page for 2 users
+
+First, create user’s public_html and assign permissions.
+
+$ mkdir /home/user1/public_html
+$ chmod 711 /home/user1
+$ chown user1:user1 /home/user1/public_html
+$ chmod 755 /home/user1/public_html
+
+Not sure what this does, but the documentation I used said to do this. 
+
+***NEED TO LOOK UP***
+
+$ setsebool -P httpd_enable_homedirs true
+$ chcon -R -t httpd_sys_content_t /home/user1/public_html
+
+Create page by editing index.html and change its permissions.
+
+$ vi /home/user1/public_html/index.html
+$ chmod 644 /home/user1/public_html/index.html
+
+Visit page to confirm it is working.
+http://192.168.33.102:8080/~user1/
+
+It you want to edit the homepage.
+
+$ vi /var/www/html/index.html
+
+
+Answer #4. 
+Startup Apache at boot
+
+$ sudo systemctl enable httpd
+
+To confirm run:
+
+$ systemctl list-unit-files
+
+
+Answer #5. 
+Configure Apache to run on port 8080
+
+$ vi /etc/httpd/conf/httpd.conf
+add Listen 1.2.3.4:8080
+
+
+Answer #6.
+Start Apache not as root, but as a different user.
+
+$ vi /etc/httpd/conf/httpd.conf
+
+Change with new user name
+
+User apache
+Group apache
+
+To confirm:
+
+$ ps -ef | grep -i httpd
+
+
+Answer #7. 
+Start the HTTPD parent process as another user (not root)
 
 
 
