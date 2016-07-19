@@ -7,7 +7,7 @@ Configure/Setup Apache
 4. Startup Apache at boot
 5. Configure Apache to run on port 8080
 6. Start Apache not as root, but as a different user.
-7. Start the HTTPD parent process as another user (not root)
+7. Start the HTTPD parent process as another user (not root) on port 80
 
 http://www.tutorialspoint.com/articles/install-and-configure-apache-server-on-centos-7
 http://www.liquidweb.com/kb/how-to-install-apache-on-centos-7/
@@ -120,7 +120,7 @@ $ ps -ef | grep -i httpd
 
 
 Answer #7. 
-Start the HTTPD parent process as another user (not root)
+Start the HTTPD parent process as another user (not root) on port 80
 
 
 
