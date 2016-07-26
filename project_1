@@ -30,6 +30,7 @@ Make root red, and master and minion different colors.
 
 Add to /etc/bashrc:
 
+# Adds prompt color and different color prompt for root
 CURRENTUSER=`whoami`
 
 if [ "$CURRENTUSER" = "root" ]; then
