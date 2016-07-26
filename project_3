@@ -12,6 +12,8 @@ Configure/Setup Apache
 http://www.tutorialspoint.com/articles/install-and-configure-apache-server-on-centos-7
 http://www.liquidweb.com/kb/how-to-install-apache-on-centos-7/
 https://www.unixmen.com/linux-basics-enable-apache-userdir-centos-7rhel-7/
+https://wiki.apache.org/httpd/NonRootPortBinding
+http://www.tutorialspoint.com/articles/install-and-configure-apache-server-on-centos-7
 
 
 Answer 1: 
