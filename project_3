@@ -146,6 +146,10 @@ $ chmod 777 /run/httpd
 $ chmod 777 /etc/httpd/logs
 $ chmod 777 /etc/httpd/logs/access_log /etc/httpd/logs/error_log
 
+*better way is to change owner with chown* 
+
+Reset the permission and then chown it
+
 Shut down apache
 
 $ systemctl stop http
