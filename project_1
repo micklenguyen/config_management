@@ -25,6 +25,25 @@ esac
 
 PS1=${PROMPT_COLOR}
 
+EXTRA CREDIT:
+Make root red, and master and minion different colors. 
+
+Add to /etc/bashrc:
+
+CURRENTUSER=`whoami`
+
+if [ "$CURRENTUSER" = "root" ]; then
+        PS1="\[$(tput bold)\]\e[0;41m[\u@\h \W]\$ \e[m "
+else
+        case "$HOSTNAME" in
+                master) PROMPT_COLOR="\e[0;45m[\u@\h \W]\$ \e[m " ;;
+                minion) PROMPT_COLOR="\e[0;42m[\u@\h \W]\$ \e[m " ;;
+                *) PROMPT_COLOR="[\u@\h \W]\$ "
+        esac
+
+        PS1=${PROMPT_COLOR}
+
+fi
 
 Answer #3:
 
