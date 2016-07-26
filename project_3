@@ -111,8 +111,8 @@ $ vi /etc/httpd/conf/httpd.conf
 
 Change with new user name
 
-User apache
-Group apache
+User mnguyen
+Group mnguyen
 
 To confirm:
 
@@ -122,5 +122,37 @@ $ ps -ef | grep -i httpd
 Answer #7. 
 Start the HTTPD parent process as another user (not root) on port 80
 
+Configure Apache to run on port 80
 
+$ vi /etc/httpd/conf/httpd.conf
+add/uncomment Listen 1.2.3.4:80
 
+To confirm:
+
+$ netstat -anp | grep 8080
+
+Use iptables to redirect port 80 to 8080
+
+$ sudo iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
+$ sudo iptables -A INPUT -i eth0 -p tcp --dport 8080 -j ACCEPT
+$ sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+
+Next change the permissions for these directories/files below:
+
+$ chmod 777 /run
+$ chmod 777 /run/httpd
+$ chmod 777 /etc/httpd/logs
+$ chmod 777 /etc/httpd/logs/access_log /etc/httpd/logs/error_log
+
+Shut down apache
+
+$ systemctl stop http
+
+Sudo to the user you want to start apache with and run apache
+
+$ sudo su - mnguyen
+$ /usr/sbin/httpd -DFOREGROUND
+
+Confirm that apache is running not root
+
+$ ps -ef | grep httpd
