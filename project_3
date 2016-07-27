@@ -96,7 +96,7 @@ $ sudo systemctl enable httpd
 
 To confirm run:
 
-$ systemctl list-unit-files
+$ systemctl list-unit-files | grep httpd
 
 
 Answer #5. 
@@ -112,6 +112,8 @@ $ netstat -anp | grep 8080
 
 Answer #6.
 Start Apache not as root, but as a different user.
+
+This is just changing what apache will run the child process as after the parent process is run as root. 
 
 $ vi /etc/httpd/conf/httpd.conf
 
@@ -135,24 +137,18 @@ add/uncomment Listen 1.2.3.4:80
 
 To confirm:
 
-$ netstat -anp | grep 8080
-
-Use iptables to redirect port 80 to 8080
-
-$ sudo iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
-$ sudo iptables -A INPUT -i eth0 -p tcp --dport 8080 -j ACCEPT
-$ sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+$ netstat -anp | grep 80
 
 Next change the permissions for these directories/files below:
 
-$ chmod 777 /run
-$ chmod 777 /run/httpd
-$ chmod 777 /etc/httpd/logs
-$ chmod 777 /etc/httpd/logs/access_log /etc/httpd/logs/error_log
+$ chown apache /run/httpd
+$ chown apache /etc/httpd/logs
+$ chown apache /etc/httpd/logs/access_log /etc/httpd/logs/error_log
+$ chown apache /var/log/httd
 
-*better way is to change owner with chown* 
+Then setcap:
 
-Reset the permission and then chown it
+$ setcap cap_net_bind_service=+ep /usr/sbin/httpd
 
 Shut down apache
 
@@ -160,9 +156,23 @@ $ systemctl stop http
 
 Sudo to the user you want to start apache with and run apache
 
-$ sudo su - mnguyen
+$ sudo su - apache
 $ /usr/sbin/httpd -DFOREGROUND
 
 Confirm that apache is running not root
 
 $ ps -ef | grep httpd
+
+Next add user to systemd so that when apache starts using systemctl the parent process will started using that specific user
+
+/usr/lib/systemd/system/httpd.service
+
+user=apache
+
+Another way is by using iptables
+
+Use iptables to redirect port 80 to 8080
+
+$ sudo iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT
+$ sudo iptables -A INPUT -i eth0 -p tcp --dport 8080 -j ACCEPT
+$ sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
