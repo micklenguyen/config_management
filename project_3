@@ -141,7 +141,7 @@ $ netstat -anp | grep 80
 
 Next change the permissions for these directories/files below:
 
-$ chown apache /run/httpd
+$ chown -R apache /run/httpd
 $ chown apache /etc/httpd/logs
 $ chown apache /etc/httpd/logs/access_log /etc/httpd/logs/error_log
 $ chown apache /var/log/httd
