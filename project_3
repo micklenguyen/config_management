@@ -165,9 +165,9 @@ $ ps -ef | grep httpd
 
 Next add user to systemd so that when apache starts using systemctl the parent process will started using that specific user
 
-/usr/lib/systemd/system/httpd.service
+vi /usr/lib/systemd/system/httpd.service
 
-user=apache
+User=apache
 
 Another way is by using iptables
 
