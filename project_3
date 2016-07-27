@@ -58,7 +58,11 @@ $ systemctl restart httpd.service
 Answer 3:
 Create "Hello World" page for 2 users
 
-First, create user’s public_html and assign permissions.
+First, create a user
+
+$ useradd user1
+
+Then create a user's public_html and assign permissions.
 
 $ mkdir /home/user1/public_html
 $ chmod 711 /home/user1
