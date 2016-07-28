@@ -24,3 +24,13 @@ Project 3
 5. Startup Apache at boot
 6. Configure Apache to run on port 8080
 7. Run Apache not as root, but as a different user.
+
+Project 4
+1. Configure / Setup SSL / TLS
+2. Install/Enable SSL / TLS
+3. Enable SSL / TLS with a passphrase
+4. Disable the RC4 ciphers
+5. Find a command line utility that will enable you from your minion to connect to your master to verify the ciphers that you have disabled have actually been disabled 
+6. Create a certificate in D.E.R format and try to make it work. Then convert the certificate back to PEM
+7. Make it so the client browser trusts the certificate of the server 
+8. Create a pkcs12 bundle for someone else and distribute it to them
