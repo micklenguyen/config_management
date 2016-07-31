@@ -7,3 +7,7 @@ Project 4
 6. Create a certificate in D.E.R format and try to make it work. Then convert the certificate back to PEM
 7. Make it so the client browser trusts the certificate of the server 
 8. Create a pkcs12 bundle for someone else and distribute it to them
+
+
+Answer #1:
+
