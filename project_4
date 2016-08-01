@@ -10,4 +10,25 @@ Project 4
 
 
 Answer #1:
+Configure / Setup SSL / TLS
 
+$ yum -y install mod_ssl
+
+$ vi /etc/httpd/conf.d/ssl.conf
+
+# line 59: uncomment
+DocumentRoot "/var/www/html"
+
+# line 60: uncomment and specify the server name
+ServerName www.srv.world:443
+
+# line 75: change
+SSLProtocol -All +TLSv1 +TLSv1.1 +TLSv1.2
+
+# line 100: change to the one created in [1]
+SSLCertificateFile /etc/pki/tls/certs/server.crt
+
+# line 107: change to the one created in [1]
+SSLCertificateKeyFile /etc/pki/tls/certs/server.key
+
+$ systemctl restart httpd 
