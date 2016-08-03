@@ -17,7 +17,7 @@ http://www.thegeekstuff.com/2014/06/linux-ntp-server-client/
 1. Install NTP Server
 First, install NTP package on your server using yum. Shown below:
 
-# yum install ntp
+$ yum install ntp
 
 2. Setup Restrict Values in ntp.conf
 Modify the /etc/ntp.conf file to make sure it has the following line.
@@ -53,12 +53,12 @@ driftfile is used to log how far your clock is from what it should be, and slowl
 
 5. Start the NTP Daemon
 Once the ntp.conf is configured with correct settings, start the ntp daemon.
-# systemetl start ntpd
+$ systemetl start ntpd
 
 6. Check the NTP Status
 Check the status of NTP using the ntpq command. If you get any connection refused errors then the time server is not responding or the NTP daemon/port is not started or listening.
 
-# ntpq -p
+$ ntpq -p
 
 
 Answer #2:
@@ -95,16 +95,16 @@ systemetl start ntpd
 6. Check the NTP Status
 Check the status of NTP using the ntpq command. If you get any connection refused errors then the time server is not responding or the NTP daemon/port is not started or listening.
 
-# ntpq -p
+$ ntpq -p
 
 7. Set Local Date and Time
 The ntpdate command can be used to set the local date and time by polling the NTP server. Typically, you’ll have to do this only one time. Your jitter value should be low, else check the drift from the clock in the driftfile. You may also need to change to some other NTP server based on the difference. This command synchronizes the time with your NTP server manually.
 
-# ntpdate –u 19.168.1.1
+$ ntpdate –u 19.168.1.1
 
 After this initial sync, NTP client will talk to the NTP server on an on-going basis to make sure the local time reflects the accurate time. You can also use the following command to get the current status of ntpd.
 
-# ntpdc -c sysinfo
+$ ntpdc -c sysinfo
 
 
 Answer #3:
@@ -140,17 +140,17 @@ These step will keep the ntp server from sync with
 
 Next, restart the ntp daemon to apply changes.
 
-# systemctl restart ntpd
+$ systemctl restart ntpd
 
 Manually change the time and confirm change.
 
-# sudo timedatectl set-time 18:23:00
-# date
+$ sudo timedatectl set-time 18:23:00
+$ date
 
 Restart the ntp daemon on client to reflect manually change time.
 
-# systemctl restart ntpd
-# date
+$ systemctl restart ntpd
+$ date
 
 Reverse steps and restart ntp daemon to revert to original settings. 
 
@@ -158,49 +158,49 @@ Reverse steps and restart ntp daemon to revert to original settings.
 3. Change Time on ntp Client to Show Drift Correction
 First you need to turn of ntp daemon.
 
-# systemctl stop ntpd
+$ systemctl stop ntpd
 
 Then you need to change the time.
 
-# sudo timedatectl set-time 18:23:00
+$ sudo timedatectl set-time 18:23:00
 
 Turn back on ntp daemon
 
-# systemctl start ntpd
+$ systemctl start ntpd
 
 Confirm that it is connecting to the ntp server.
 
-# ntpq -p
+$ ntpq -p
 
 Check time.
 
-# date
+$ date
 
 
 Answer #4:
 Find out what port ntp os listening on and to autostart on boot by running the following:
 
-# netstat -an | grep 123
-# systemctl | grep ntpd
+$ netstat -an | grep 123
+$ systemctl | grep ntpd
 
 *THIS IS NOT CORRECT MISSING A STEP*
 
 
 Summary of Commands:
 
-# systemctl start ntpd
+$ systemctl start ntpd
 Command for Centos to start up ntp daemon
 
-# lsof -i -n -P
+$ lsof -i -n -P
 Lists all the services installed
 
-# ps -aux | grep ntp
+$ ps -aux | grep ntp
 Use to see if ntp is running
 
-# ntpq -p
+$ ntpq -p
 The ntpq utility program is used to monitor NTP daemon ntpd operations and determine performance. Tells you if its working.
 
-# sudo timedatectl set-time 18:23:00
+$ sudo timedatectl set-time 18:23:00
 Manually sets date
 
 # VBoxManage setextradata “vagrant_master_1466718712371_1090" "VBoxInternal/Devices/VMMDev/0/Config/GetHostTimeDisabled” 1
