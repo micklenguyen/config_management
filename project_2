@@ -176,8 +176,10 @@ Check time.
 
 $ date
 
-
 Answer #4:
+$ systemctl enable ntpd
+
+Answer #5:
 Find out what port ntp os listening on and to autostart on boot by running the following:
 
 $ netstat -an | grep 123
