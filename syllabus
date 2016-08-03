@@ -1,7 +1,7 @@
 Configure Management Syllabus 
 
 Project 1
-
+MOTD: Message of the Day
 1. Set the background of the prompt of the master to red, for all users
 2. Set the background of the prompt of the minion to green, for all users
 3. Set the path for all users. the path can be arbitrary.
@@ -9,28 +9,31 @@ Project 1
 
 Project 2
 Configure / Setup NTP
-
 1. Configure Master with NTP service
 2. Configure Minion with NTP client
 3. Change time manually on Master and see if time changes on the Minion and vice versa
 4. Have NTP Autostart on boot
 5. Check listening ports of the NTP service
+6. Where is the config file located?
  
 Project 3
-1. Configure/Setup Apache
-2. Install/Start Apache
-3. Configure Apache to serve web content from all home directories
-4. Create "Hello World" page for 2 users
-5. Startup Apache at boot
-6. Configure Apache to run on port 8080
-7. Run Apache not as root, but as a different user.
+Configure/Setup Apache
+1. Install/Start Apache
+2. Configure Apache to serve web content from all home directories
+3. Create "Hello World" page for 2 users
+4. Startup Apache at boot
+5. Configure Apache to run on port 8080
+6. Start Apache not as root, but as a different user.
+7. Start the HTTPD parent process as another user (not root) on port 80
 
 Project 4
-1. Configure / Setup SSL / TLS
-2. Install/Enable SSL / TLS
-3. Enable SSL / TLS with a passphrase
-4. Disable the RC4 ciphers
-5. Find a command line utility that will enable you from your minion to connect to your master to verify the ciphers that you have disabled have actually been disabled 
-6. Create a certificate in D.E.R format and try to make it work. Then convert the certificate back to PEM
-7. Make it so the client browser trusts the certificate of the server 
+Configure / Setup SSL / TLS
+1. Install/Enable SSL / TLS
+2. Enable SSL / TLS with a passphrase
+3. Disable the RC4 ciphers
+4. Find a command line utility that will enable you from your minion to connect to your master to verify the ciphers that you have disabled have actually been disabled 
+5. Create a certificate in D.E.R format and try to make it work. Then convert the certificate back to PEM
+6. Once the certificate is back in PEM format take the certificate NOT The private key and install it into the certificate key store for your computer
+7. Then using safari visit the page for the web server and ensure that you DON'T get a certificate warning
 8. Create a pkcs12 bundle for someone else and distribute it to them
+9. Have them change their servername to match your certificate and ensure that you can start the server
