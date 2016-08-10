@@ -1,34 +1,126 @@
 Project 4
-1. Configure / Setup SSL / TLS
-2. Install/Enable SSL / TLS
-3. Enable SSL / TLS with a passphrase
-4. Disable the RC4 ciphers
-5. Find a command line utility that will enable you from your minion to connect to your master to verify the ciphers that you have disabled have actually been disabled 
-6. Create a certificate in D.E.R format and try to make it work. Then convert the certificate back to PEM
-7. Make it so the client browser trusts the certificate of the server 
+Configure / Setup SSL / TLS
+1. Install / Enable SSL / TLS
+2. Enable SSL / TLS with a passphrase
+3. Disable the RC4 ciphers
+4. Find a command line utility that will enable you from your minion to connect to your master to verify the ciphers that you have disabled have actually been disabled 
+5. Create a certificate in D.E.R format and try to make it work. Then convert the certificate back to PEM
+6. Once the certificate is back in PEM format take the certificate NOT The private key and install it into the certificate key store for your computer
+7. Then using safari visit the page for the web server and ensure that you DON'T get a certificate warning
 8. Create a pkcs12 bundle for someone else and distribute it to them
+9. Have them change their servername to match your certificate and ensure that you can start the server
 
 
 Answer #1:
-Configure / Setup SSL / TLS
+Install / Enable SSL / TLS
 
-$ yum -y install mod_ssl
+Check to see if Apache is installed:
+$ ps -aux | grep httpd
 
+If not installed, install Apache now:
+$ sudo yum install httpd
+
+Then enable Apache after reboot:
+$ sudo systemctl enable httpd.service
+
+Install Mod SSL:
+$ sudo yum install mod_ssl
+
+
+Answer #2:
+Enable SSL / TLS with a passphrase
+
+First, we need to create a new directory where we will store the server key and certificate:
+$ sudo mkdir /etc/httpd/ssl
+
+Now that we have a location to place our files, we can create the SSL key and certificate files with openssl. To do this with a passphrase remove the -nodes below:
+$ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/httpd/ssl/apache.key -out /etc/httpd/ssl/apache.crt
+
+Details of the command above:
+openssl: This is the basic command line tool for creating and managing OpenSSL certificates, keys, and other files.
+req -x509: This specifies that we want to use X.509 certificate signing request (CSR) management. The "X.509" is a public key infrastructure standard that SSL and TLS adhere to for key and certificate management.
+-nodes: (no des) This tells OpenSSL to skip the option to secure our certificate with a passphrase. We need Apache to be able to read the file, without user intervention, when the server starts up. A passphrase would prevent this from happening, since we would have to enter it after every restart.
+-days 365: This option sets the length of time that the certificate will be considered valid. We set it for one year here.
+-newkey rsa:2048: This specifies that we want to generate a new certificate and a new key at the same time. We did not create the key that is required to sign the certificate in a previous step, so we need to create it along with the certificate. The rsa:2048 portion tells it to make an RSA key that is 2048 bits long.
+-keyout: This line tells OpenSSL where to place the generated private key file that we are creating.
+-out: This tells OpenSSL where to place the certificate that we are creating.
+
+
+Answer #3:
+Disable the RC4 ciphers
+
+Sources: 
+http://www.wisegeek.com/what-is-an-ssl-cipher.htm
+https://www.sslshopper.com/article-how-to-disable-weak-ciphers-and-ssl-2.0-in-apache.html
+
+A cipher suite is a named combination of authentication, encryption, message authentication code (MAC) and key exchange algorithms used to negotiate the security settings for a network connection using the Transport Layer Security (TLS) / Secure Sockets Layer (SSL) network protocol.
+
+To see is cipher RC4 that are available to use:
+$ openssl ciphers -V
+
+Edit ssl.conf or httpd.conf and disable permission for RC4 (!RC4):
 $ vi /etc/httpd/conf.d/ssl.conf
 
-# line 59: uncomment
-DocumentRoot "/var/www/html"
+#   SSL Cipher Suite:
+#   List the ciphers that the client is permitted to negotiate.
+#   See the mod_ssl documentation for a complete list.
+SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5:!SEED:!IDEA:!RC4
 
-# line 60: uncomment and specify the server name
-ServerName www.srv.world:443
+Restart Apache:
+$ systemctl restart httpd
 
-# line 75: change
-SSLProtocol -All +TLSv1 +TLSv1.1 +TLSv1.2
 
-# line 100: change to the one created in [1]
-SSLCertificateFile /etc/pki/tls/certs/server.crt
+Answer #4:
+Find a command line utility that will enable you from your minion to connect to your master to verify the ciphers that you have disabled have actually been disabled
 
-# line 107: change to the one created in [1]
-SSLCertificateKeyFile /etc/pki/tls/certs/server.key
+To confirm that cipher is disabled:
+$ openssl s_client -cipher RC4-MD5 -connect 192.168.33.102:443
 
-$ systemctl restart httpd 
+To confirm that cipher is disabled:
+$ openssl s_client -cipher AES128-SHA256 -connect 192.168.33.102:443
+
+
+Answer #5:
+Create a certificate in D.E.R format and try to make it work. Then convert the certificate back to PEM.
+
+This excercise is to prove that the other formats can be used for the certificate, doesn’t have to be in a specific format.
+
+This is to create the .der form of the certificate:
+$ openssl x509 -outform der -in /etc/httpd/ssl/apache.crt -out certificate.der
+
+How to view the DER encoded certificate:
+$ openssl x509 -in /etc/httpd/ssl/certificate.der -inform der -text -noout
+
+Will convert the .der form of the certificate back to a PEM format:
+$ openssl x509 -inform der -in /etc/httpd/ssl/certificate.der -out certificate.pem
+
+
+Answer #6: 
+Once the certificate is back in PEM format take the certificate NOT the private key and install it into the certificate key store for your computer
+
+https://www.sslshopper.com/how-to-move-or-copy-an-ssl-certificate-from-one-server-to-another.html
+
+$ scp /etc/httpd/ssl/apache.crt mnguyen@OKL3452:~/Desktop/
+
+
+Answer #7:
+Then using Safari visit the page for the web server and ensure that you DON'T get a certificate warning
+
+Add the certificate to the Keychain Access on your local machine. Then, right-click -> Get Info. Next, expand Trust and put Always Trust on the When Using this Certificate option.
+
+8. Create a pkcs12 bundle for someone else and distribute it to them
+
+
+9. Have them change their servername to match your certificate and ensure that you can start the server
+
+Update the httpd.conf file and add the IP address/DNS name:
+$ vi /etc/httpd/conf/httpd.conf
+
+#
+# ServerName gives the name and port that the server uses to identify itself.
+# This can often be determined automatically, but we recommend you specify
+# it explicitly to prevent problems during startup.
+#
+# If your host doesn't have a registered DNS name, enter its IP address here.
+#
+ServerName 192.168.33.102:80
