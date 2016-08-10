@@ -112,6 +112,13 @@ Add the certificate to the Keychain Access on your local machine. Then, right-cl
 Answer #8:
 Create a pkcs12 bundle for someone else and distribute it to them
 
+  # OpenSSL, doesn’t use PKCS#12 as a native format. However it knows how to convert to it.
+  
+  # Concatenate the certificate with the key file and then have OpenSSL convert it to PKCS12
+   $ cat example-key.pem example.crt > example.pem
+
+  # This command will have OpenSSL convert the concatenated file from above to a .PKCS12 file format
+  $ openssl pkcs12 -export -in pkcs12.pem -out pkcs.pkcs12 -name "PKCS"
 
 Answer #9:
 Have them change their servername to match your certificate and ensure that you can start the server
