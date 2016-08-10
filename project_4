@@ -108,10 +108,13 @@ Then using Safari visit the page for the web server and ensure that you DON'T ge
 
 Add the certificate to the Keychain Access on your local machine. Then, right-click -> Get Info. Next, expand Trust and put Always Trust on the When Using this Certificate option.
 
-8. Create a pkcs12 bundle for someone else and distribute it to them
+
+Answer #8:
+Create a pkcs12 bundle for someone else and distribute it to them
 
 
-9. Have them change their servername to match your certificate and ensure that you can start the server
+Answer #9:
+Have them change their servername to match your certificate and ensure that you can start the server
 
 Update the httpd.conf file and add the IP address/DNS name:
 $ vi /etc/httpd/conf/httpd.conf
