@@ -1,0 +1,19 @@
+Project 5
+Configure/Setup mySQL
+1. Install and Start mySQL
+2. Configure mySQl to auto restart on boot
+3. Create a User within mySQL
+4. Figure out how to import the sql file data from: linux_projects.sql
+5. Figure out how to make a change to Update the record from wp_posts that has a post_date of "2011-07-30 07:35:15" 
+6. Backup the database to a file name of your choosing 
+7. Give the backup to another team member 
+8. Have that team member import the backup
+9. Translate the tutorial to Centos 7 for https://www.digitalocean.com/community/tutorials/how-to-set-up-an-apache-mysql-and-python-lamp-server-without-frameworks-on-ubuntu-14-04
+10. Remember that record from wp_posts that has a post_date of:  "2011-07-30 07:35:15"  ? 
+11. Create a python script called one_record.py on your web server and ensure that it will print "Hello Brian T. " 
+12. Using the tutorial from above figure out how to change the file one_record.py to  JUST print that ONE record when you visit the page 
+
+
+Answer #1:
+Install and Start mySQL
+
