@@ -17,7 +17,44 @@ Configure/Setup mySQL
 Answer #1:
 Install and Start mySQL
 
-https://www.linode.com/docs/databases/mysql/how-to-install-mysql-on-centos-7
+https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-centos-7
+
+Install MariaDB, a MySQL drop-in replacement. MariaDB is a community-developed fork of the MySQL relational database management system. Basically, it will organize and provide access to databases where our site can store information.
+$ sudo yum install mariadb-server mariadb
+
+When the installation is complete, we need to start MariaDB with the following command:
+$ sudo systemctl start mariadb
+
+We want to run a simple security script that will remove some dangerous defaults and lock down access to our database system a little bit. Start the interactive script by running:
+$ sudo mysql_secure_installation
+
+The prompt will ask you for your current root password. Since you just installed MySQL, you most likely won’t have one, so leave it blank by pressing enter. Then the prompt will ask you if you want to set a root password. Go ahead and enter Y, and set password.
+
+For the rest of the questions, you should simply hit the "ENTER" key through each prompt to accept the default values.
+
+
+Answer #2:
+ Configure mySQL to auto restart on boot
+
+$ sudo systemctl enable mariadb.service
+
+
+Answer #3:
+Create a User within mySQL
+
+http://www.cyberciti.biz/faq/how-to-install-mariadb-databases-on-a-freebsd-v10-unix-server/mariadb-create-user-database-password/
+
+Login as root on the MariaDB server:
+$ mysql -u root -p
+
+The sql syntax is as follows to create database named testDB:
+$ CREATE DATABASE testDB;
+
+The sql syntax is as follows to create a user named wpuser for a db called testDB with a password called ‘password’. The following will also grant user1 full rights:
+$ GRANT ALL ON testDB.* TO user1@localhost IDENTIFIED BY ‘password';
+
+Exit from the mysql client and connect as follows to create tables:
+$ mysql -u user1 -p testDB
 
 
 
