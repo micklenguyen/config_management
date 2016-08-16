@@ -76,7 +76,7 @@ Find a command line utility that will enable you from your minion to connect to 
 To confirm that cipher is disabled:
 $ openssl s_client -cipher RC4-MD5 -connect 192.168.33.102:443
 
-To confirm that cipher is disabled:
+To confirm that cipher is enabled:
 $ openssl s_client -cipher AES128-SHA256 -connect 192.168.33.102:443
 
 
