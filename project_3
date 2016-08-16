@@ -27,7 +27,7 @@ Configure Apache to serve web content from all home directories
 
 First, enable Apache Userdirs. 
 
-$ vi etc/httpd/conf.d/userdir.conf
+$ vi /etc/httpd/conf.d/userdir.conf
 
 Match the file to what is listened below.
 
