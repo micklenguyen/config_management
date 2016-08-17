@@ -12,45 +12,41 @@ Configure/Setup mySQL
 Answer #1:
 Install and Start mySQL
 
-https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-centos-7
+https://www.linode.com/docs/databases/mysql/how-to-install-mysql-on-centos-7
 
-Install MariaDB, a MySQL drop-in replacement. MariaDB is a community-developed fork of the MySQL relational database management system. Basically, it will organize and provide access to databases where our site can store information.
-$ sudo yum install mariadb-server mariadb
+MySQL must be installed from the community repository. Download and add the repository, then update.
 
-When the installation is complete, we need to start MariaDB with the following command:
-$ sudo systemctl start mariadb
+$ wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+$ sudo rpm -ivh mysql-community-release-el7-5.noarch.rpm
+$ yum update
 
-We want to run a simple security script that will remove some dangerous defaults and lock down access to our database system a little bit. Start the interactive script by running:
-$ sudo mysql_secure_installation
+Install MySQL as usual and start the service. During installation, you will be asked if you want to accept the results from the .rpm file’s GPG verification. If no error or mismatch occurs, enter y.
 
-The prompt will ask you for your current root password. Since you just installed MySQL, you most likely won’t have one, so leave it blank by pressing enter. Then the prompt will ask you if you want to set a root password. Go ahead and enter Y, and set password.
-
-For the rest of the questions, you should simply hit the "ENTER" key through each prompt to accept the default values.
-
+$ sudo yum install mysql-server
+$ sudo systemctl start mysqld
 
 Answer #2:
- Configure mySQL to auto restart on boot
+Configure mySQL to auto restart on boot
 
-$ sudo systemctl enable mariadb.service
-
+$ sudo systemctl enable mysqld
 
 Answer #3-4:
 Create a User within mySQL
 Create a database
 
-http://www.cyberciti.biz/faq/how-to-install-mariadb-databases-on-a-freebsd-v10-unix-server/mariadb-create-user-database-password/
+In the example below, testdb is the name of the database, testuser is the user, and password is the user’s password.
 
-Login as root on the MariaDB server:
-$ mysql -u root -p
+$ create database testdb;
+$ create user 'testuser'@'localhost' identified by 'password';
+$ grant all on testdb.* to 'testuser' identified by 'password';
+You can shorten this process by creating the user while assigning database permissions:
 
-The sql syntax is as follows to create database named testDB:
-$ CREATE DATABASE testDB;
+$ create database testdb;
+$ grant all on testdb.* to 'testuser' identified by 'password';
 
-The sql syntax is as follows to create a user named wpuser for a db called testDB with a password called ‘password’. The following will also grant user1 full rights:
-$ GRANT ALL ON testDB.* TO user1@localhost IDENTIFIED BY ‘password';
+Then exit MySQL.
 
-Exit from the mysql client and connect as follows to create tables:
-$ mysql -u user1 -p testDB
+$exit
 
 
 Answer #5:
@@ -64,14 +60,79 @@ $ scp mnguyen@OKL3452:~/Desktop/linux_projects.sql /root
 Import sql file:
 mysql -u [username] -p newdatabase < [database name].sql
 
-$ mysql -u user1 -p testDB < linux_projects.sql
+$ mysql -u testuser -p testdb < linux_projects.sql
 
 
 Answer #6:
 Configure DbViz or Sequel Pro to view the information in your Database remotely
 
+Open Sequel Pro
+Add new DB, enter the IP, username and password and connect.
 
 
-https://www.digitalocean.com/community/tutorials/a-basic-mysql-tutorial
+Answer #7:
+Change the port of that mySQL is running on and restart the process
+
+# Disable SeLinux
+$ vi /etc/sysconfig/selinux
+SELINUX=disabled
+
+$ vi /etc/my.cnf
+# Change Port 
+port = 7777
+
+# Restart the computer (for Disabling SeLiux)
+$ init 6
 
 
+8.  Confirm that you can still view your database remotely.
+Change the port number on Sequel Pro and connect.
+
+
+******************************************** Troubleshooting and Bonus Commands ******************************************
+# Good mysql Tutorial Commands
+# https://www.digitalocean.com/community/tutorials/a-basic-mysql-tutorial
+
+
+
+# Update password for user
+> update user set password=PASSWORD('password') where user='mbills';
+
+
+# granted privileges to a database for a new user in mysql
+> GRANT ALL PRIVILEGES ON databasename.* TO 'mbills'@'localhost';
+
+
+# If you receive a socket error when starting mysql, the solution is
+
+# ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/lib /mysql/mysql.sock' (111)
+
+# This is on Redhat 5.6.31
+$ vi /usr/my.cnf 
+# On Centos
+$ vi /etc/my.cnf
+# Include the below parameters
+datadir = /var/lib/mysql/
+socket = /var/lib/mysql/mysql.sock
+
+
+
+# The other issue I ran into was the inability to change / set my root password
+$ sudo /usr/bin/mysql_secure_installation
+
+# If you get an error during that process you can add this to the my.cnf file mentioned above
+# Also for version MySql 5.6.31
+# skip-grant-tables
+
+Changing a password in mysql
+$ mysql -u root p
+mysql> SET PASSWORD = PASSWORD('new_password');
+
+# How To Completely Removing MySQL Server in CentOS
+
+$ rpm -qa | grep mysql
+# or
+$ yum list installed | grep mysql
+$ yum remove MySQL-devel, MySQL-client, MySQL-shared-compat, MySQL-server, MySQL-test, MySQL-shared, MySQL-embedded
+$ rm -rf /var/lib/mysql/
+$ rm -rf /etc/my.cnf
