@@ -3,3 +3,8 @@ Nagios
 1. Install nagios
 2. Configure Nagios to auto restart on boot
 3. Set up checks for mysql, apache, process, port and health check
+
+
+https://www.digitalocean.com/community/tutorials/how-to-install-nagios-4-and-monitor-your-servers-on-centos-7
+
+
