@@ -1,0 +1,5 @@
+Project 6
+Nagios
+1. Install nagios
+2. Configure Nagios to auto restart on boot
+3. Set up checks for mysql, apache, process, port and health check
