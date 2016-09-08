@@ -34,6 +34,8 @@ Answer #3-4:
 Create a User within mySQL
 Create a database
 
+$ sudo mysql_secure_installation
+
 In the example below, testdb is the name of the database, testuser is the user, and password is the user’s password.
 
 $ create database testdb;
