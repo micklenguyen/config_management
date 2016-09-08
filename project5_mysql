@@ -34,10 +34,15 @@ Answer #3-4:
 Create a User within mySQL
 Create a database
 
-$ sudo mysql_secure_installation
+Now that our MySQL database is running, we want to run a simple security script that will remove some dangerous defaults and lock down access to our database system a little bit. Start the interactive script by running:
+
+$sudo mysql_secure_installation
+
+The prompt will ask you for your current root password. Since you just installed MySQL, you most likely won’t have one, so leave it blank by pressing enter. Then the prompt will ask you if you want to set a root password. Go ahead and enter Y, and follow the instructions:
 
 In the example below, testdb is the name of the database, testuser is the user, and password is the user’s password.
 
+$ mysql -u root -p
 $ create database testdb;
 $ create user 'testuser'@'localhost' identified by 'password';
 $ grant all on testdb.* to 'testuser' identified by 'password';
